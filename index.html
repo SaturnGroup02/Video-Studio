@@ -87,6 +87,12 @@ header{
 .tts-badge{display:none;font-size:11px;font-weight:700;color:var(--yellow);border:1px solid rgba(254,231,92,.4);
   background:rgba(254,231,92,.08);border-radius:999px;padding:5px 11px;white-space:nowrap}
 .tts-badge.show{display:block}
+.narr-btn{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;border-radius:999px;
+  padding:9px 16px;border:1px solid rgba(62,230,255,.5);color:var(--cyan);white-space:nowrap;
+  background:linear-gradient(120deg,rgba(62,230,255,.14),rgba(88,101,242,.12));transition:transform .15s,box-shadow .2s}
+.narr-btn:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(62,230,255,.25)}
+.narr-btn.off{color:var(--muted);border-color:var(--line);background:var(--surface)}
+.narr-btn svg{width:17px;height:17px;flex:none}
 .sound-btn{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;border-radius:999px;
   padding:9px 16px;border:1px solid rgba(255,176,58,.5);color:var(--amber);
   background:linear-gradient(120deg,rgba(255,176,58,.16),rgba(255,92,122,.12));
@@ -211,7 +217,9 @@ header{
 .dc-msgs{flex:1;min-height:0;padding:1cqw 1.3cqw;display:flex;flex-direction:column;gap:1.05cqw;overflow:hidden}
 .msg{display:flex;gap:.95cqw}
 .av{width:3.2cqw;height:3.2cqw;flex:none;border-radius:50%;display:grid;place-items:center;font-size:1.4cqw;font-weight:900;color:#fff}
-.av-bot{background:linear-gradient(135deg,#FFB03A,#FF5C7A);box-shadow:0 0 calc(1.2cqw*var(--glow)) rgba(255,176,58,.5)}
+.av-bot{background:linear-gradient(135deg,#FFB03A,#FF5C7A);box-shadow:0 0 calc(1.2cqw*var(--glow)) rgba(255,176,58,.5);
+  font-family:var(--f-disp);font-size:1.08cqw;letter-spacing:-.03em}
+.av-mini{width:2.2cqw;height:2.2cqw;font-size:.75cqw}
 .av-y{background:linear-gradient(135deg,#3EE6FF,#5865F2)}
 .av-k{background:linear-gradient(135deg,#57F287,#0FA968)}
 .av-h{background:linear-gradient(135deg,#EB459E,#8B5CF6)}
@@ -241,6 +249,7 @@ header{
 .mem-label{font-size:1.02cqw;font-weight:700;letter-spacing:.08em;color:var(--dmuted)}
 .mem{display:flex;align-items:center;gap:.6cqw}
 .mem .av{width:2.5cqw;height:2.5cqw;font-size:1.1cqw;position:relative}
+.mem .av-bot{font-size:.8cqw}
 .mem .av::after{content:"";position:absolute;right:-.15cqw;bottom:-.15cqw;width:.85cqw;height:.85cqw;border-radius:50%;background:var(--green);border:.22cqw solid var(--dside)}
 .mem span{font-size:1.28cqw;color:var(--dmuted);font-weight:500;white-space:nowrap}
 .mem.bot span{color:var(--amber)}
@@ -299,6 +308,7 @@ header{
 .dm-item{display:flex;align-items:center;gap:.7cqw;padding:.55cqw .6cqw;border-radius:.6cqw}
 .dm-item.on{background:#3F4248}
 .dm-item .av{width:2.7cqw;height:2.7cqw;font-size:1.2cqw}
+.dm-item .av-bot{font-size:.92cqw}
 .dm-item b{font-size:1.35cqw;color:var(--dtext);font-weight:700;display:block;line-height:1.2}
 .dm-item small{font-size:1.02cqw;color:var(--green)}
 .dm-item.off b{color:var(--dmuted)}
@@ -582,8 +592,8 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
   .console{position:static;max-height:none}
 }
 @media (max-width:760px){
-  .rec-btn span{display:none}
-  .rec-btn{padding:9px 12px}
+  .rec-btn span,.narr-btn span{display:none}
+  .rec-btn,.narr-btn{padding:9px 12px}
   .badge{display:none}
 }
 @media (max-width:640px){
@@ -600,7 +610,10 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
   .ch-label span{display:none}
   .ch-label{align-items:center;padding:0 3px}
 }
-@media (max-width:560px){ #btnFull{display:none} }
+@media (max-width:560px){
+  #btnFull{display:none}
+  .brand-t{display:none}
+}
 
 @container stage (max-width:700px){
   .dc-rail,.dc-side,.dc-members{display:none}
@@ -609,6 +622,8 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
   .dc-topic{font-size:1.8cqw}
   .msg{gap:1.3cqw}
   .av{width:4.6cqw;height:4.6cqw;font-size:2cqw}
+  .av-bot{font-size:1.5cqw}
+  .av-mini{width:3.4cqw;height:3.4cqw;font-size:1.15cqw}
   .msg-n b{font-size:2.2cqw}
   .bot-tag{font-size:1.5cqw}
   .msg-t{font-size:1.6cqw}
@@ -689,6 +704,11 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
   <span class="badge">PROMO FILM</span>
   <div class="hd-right">
     <span class="tts-badge" id="ttsBadge">字幕モード（TTSなし）</span>
+    <button class="narr-btn" id="btnNarr" aria-pressed="true" title="読み上げナレーションのオン/オフ（V）— BGM・効果音はそのまま">
+      <svg id="icoNarrOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Z" fill="currentColor" stroke="none"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><line x1="12" y1="17.5" x2="12" y2="21"/><line x1="8.5" y1="21" x2="15.5" y2="21"/></svg>
+      <svg id="icoNarrOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-.5 1.66"/><path d="M9 9.5V11a3 3 0 0 0 4.6 2.5"/><path d="M5.5 11a6.5 6.5 0 0 0 10.2 5.3M18.5 11a6.4 6.4 0 0 1-.6 2.7"/><line x1="12" y1="17.5" x2="12" y2="21"/><line x1="8.5" y1="21" x2="15.5" y2="21"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+      <span id="narrLabel">読み上げ ON</span>
+    </button>
     <button class="rec-btn" id="btnRecord" title="動画をWEBMで録画してダウンロード">
       <span class="rd"></span><span id="recLabel">動画DL</span>
     </button>
@@ -764,7 +784,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 <div class="msg-x">おはよう！今日の予定、一緒に考えて🌞</div></div>
               </div>
               <div class="msg rv rv1" style="--d:1s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 6:02</span></div>
                 <div class="msg-x">おはよう、ユキさん☀️ 朝は散歩から。9時に作業、午後はカフェで読書なんてどう？</div></div>
               </div>
@@ -774,7 +794,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 <div class="msg-x">量子コンピュータって何？やさしく教えて</div></div>
               </div>
               <div class="msg rv rv2" style="--d:1s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 6:04</span></div>
                 <div class="msg-x">いい質問！量子の「重ね合わせ」で計算する次世代マシン。例えるなら、迷路の全ルートを同時に試す感じだよ。</div></div>
               </div>
@@ -811,7 +831,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 <div class="msg-x"><span class="mention">@AsaRye-AI</span> 2026年 注目のAIガジェットを調べて！</div></div>
               </div>
               <div class="msg msg-res1 rv rv1" style="--d:1s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 8:15</span></div>
                 <div class="msg-x">了解！ウェブで最新情報を検索してくるね 🔎</div>
                 <div class="emb emb-live">
@@ -826,7 +846,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 </div>
               </div>
               <div class="msg rv rv2" style="--d:.1s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 8:16</span></div>
                 <div class="msg-x">調べ終わったよ！要点をまとめたね ✨</div>
                 <div class="emb emb-sum">
@@ -883,13 +903,13 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
             <div class="dc-srvhead">メッセージ</div>
             <div class="dm-list">
               <div class="dm-cap">ダイレクトメッセージ</div>
-              <div class="dm-item on"><div class="av av-bot">旭</div><div><b style="color:var(--amber)">AsaRye-AI</b><small>● オンライン</small></div></div>
+              <div class="dm-item on"><div class="av av-bot">AR</div><div><b style="color:var(--amber)">AsaRye-AI</b><small>● オンライン</small></div></div>
               <div class="dm-item off"><div class="av av-h">ハ</div><div><b>ハルカ</b><small>取り込み中</small></div></div>
               <div class="dm-item off"><div class="av av-k">メ</div><div><b>メモ帳</b><small>自分専用</small></div></div>
             </div>
           </div>
           <div class="dc-main">
-            <div class="dc-head"><div class="av av-bot" style="width:2.2cqw;height:2.2cqw;font-size:1cqw">旭</div>AsaRye-AI<span class="lock-pill">🔒 二人だけの空間</span></div>
+            <div class="dc-head"><div class="av av-bot av-mini">AR</div>AsaRye-AI<span class="lock-pill">🔒 二人だけの空間</span></div>
             <div class="dc-msgs">
               <div class="msg rv rv1" style="--d:.1s">
                 <div class="av av-y">あ</div>
@@ -897,7 +917,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 <div class="msg-x">ちょっと聞いてよ、今日さ…</div></div>
               </div>
               <div class="msg rv rv1" style="--d:1s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 22:41</span></div>
                 <div class="msg-x">うんうん、聞かせて。ここは二人だけの場所だから、なんでも話して。</div></div>
               </div>
@@ -907,7 +927,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 <div class="msg-x">明日のプレゼン、緊張するなぁ</div></div>
               </div>
               <div class="msg rv rv2" style="--d:1s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 22:43</span></div>
                 <div class="msg-x">大丈夫。深呼吸、ゆっくり話す、最後に笑顔。これで完璧だよ✨</div>
                 <div class="reacts"><span class="react hl rv pop rv2" style="--d:1.7s">💛 1</span></div></div>
@@ -946,7 +966,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
                 <div class="msg-x">みんな、<span class="mention">@AsaRye-AI</span> 呼んでみて！チャンネルで使えるよ</div></div>
               </div>
               <div class="msg rv rv1" style="--d:1.15s">
-                <div class="av av-bot">旭</div>
+                <div class="av av-bot">AR</div>
                 <div class="msg-b"><div class="msg-n"><b class="n-bot">AsaRye-AI</b><span class="bot-tag">BOT ✓</span><span class="msg-t">今日 7:00</span></div>
                 <div class="msg-x">みんな、おはよう！☀️ 今日も良い朝にしよう。質問も雑談も、ここで待ってるよ。</div></div>
               </div>
@@ -971,7 +991,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
           </div>
           <div class="dc-members">
             <div class="mem-label">オンライン — 5</div>
-            <div class="mem bot"><div class="av av-bot">旭</div><span>AsaRye-AI</span></div>
+            <div class="mem bot"><div class="av av-bot">AR</div><span>AsaRye-AI</span></div>
             <div class="mem"><div class="av av-y">ユ</div><span>ユキ</span></div>
             <div class="mem"><div class="av av-k">ハ</div><span>ハルト</span></div>
             <div class="mem"><div class="av av-m">ミ</div><span>ミオ</span></div>
@@ -1084,6 +1104,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
         </div>
         <div class="status" id="voiceStatus"><i></i><span>音声を検索しています…</span></div>
       </div>
+      <label class="tgl-row"><span>読み上げナレーション</span><input type="checkbox" class="tgl-in" id="narrToggle" checked><span class="tgl-pill"></span></label>
       <div class="ctl"><div class="ctl-l"><label for="rate">話す速さ</label><output id="rateVal">1.00×</output></div>
         <input type="range" id="rate" min="0.6" max="1.6" step="0.05" value="1"></div>
       <div class="ctl"><div class="ctl-l"><label for="pitch">声の高さ</label><output id="pitchVal">1.00</output></div>
@@ -1142,7 +1163,7 @@ body.cinema.recording .toasts{opacity:0;pointer-events:none}
 
     <div class="keys">
       <div><kbd>Space</kbd>再生/停止</div><div><kbd>←</kbd><kbd>→</kbd>シーン</div>
-      <div><kbd>M</kbd>ミュート</div><div><kbd>C</kbd>シネマ</div><div><kbd>F</kbd>全画面</div>
+      <div><kbd>V</kbd>読み上げ</div><div><kbd>M</kbd>ミュート</div><div><kbd>C</kbd>シネマ</div><div><kbd>F</kbd>全画面</div>
     </div>
   </aside>
 </main>
@@ -1185,7 +1206,7 @@ const LEAD = 1.0, GAP = 0.55;
 
 const S = {
   state:"poster", si:0, li:-1, runId:0,
-  muted:false, vol:.9, rate:1, pitch:1, voiceURI:null, ttsOK:false,
+  muted:false, narr:true, vol:.9, rate:1, pitch:1, voiceURI:null, ttsOK:false,
   loop:false, bgm:true,
   lineElapsed:0, clock:0,
   measured:new Map(), cueTimers:[], advT:null, wdT:null
@@ -1378,7 +1399,8 @@ function enterScene(i){
 }
 function makeUtter(text){
   const u=new SpeechSynthesisUtterance(text);
-  u.lang="ja-JP"; u.rate=S.rate; u.pitch=S.pitch; u.volume=S.muted?0:S.vol;
+  u.lang="ja-JP"; u.rate=S.rate; u.pitch=S.pitch;
+  u.volume=(S.muted||!S.narr)?0:S.vol;
   const v=(synth?synth.getVoices():[]).find(v=>v.voiceURI===S.voiceURI);
   if(v) u.voice=v;
   return u;
@@ -1536,6 +1558,21 @@ function refreshVoices(){
 }
 if(synth){ synth.onvoiceschanged=refreshVoices; }
 refreshVoices(); setTimeout(refreshVoices,600); setTimeout(refreshVoices,1800);
+
+/* ---------- narration on/off ---------- */
+function setNarr(on,silent){
+  S.narr=on;
+  $("btnNarr").classList.toggle("off",!on);
+  $("btnNarr").setAttribute("aria-pressed",String(on));
+  $("narrLabel").textContent=on?"読み上げ ON":"読み上げ OFF";
+  $("icoNarrOn").style.display=on?"block":"none";
+  $("icoNarrOff").style.display=on?"none":"block";
+  $("narrToggle").checked=on;
+  if(S.state==="playing" && S.ttsOK && S.li>=0) restartCurrentLine();
+  if(!silent) toast(on?"読み上げナレーションをオンにしました":"読み上げナレーションをオフにしました（BGM・効果音は継続）");
+}
+$("btnNarr").addEventListener("click",()=>setNarr(!S.narr));
+$("narrToggle").addEventListener("change",e=>setNarr(e.target.checked));
 
 /* ---------- cinema mode ---------- */
 let idleT=null;
@@ -1741,6 +1778,7 @@ $("btnSound").addEventListener("click",()=>{ setMuted(!S.muted); toast(S.muted?"
 $("btnPreview").addEventListener("click",()=>{
   if(!S.ttsOK||!synth){ toast("日本語TTSが利用できません"); return; }
   if(S.muted){ toast("試聴するにはサウンドをオンにしてください"); return; }
+  if(!S.narr){ toast("試聴するには読み上げをオンにしてください"); return; }
   if(S.state==="playing") pauseVideo();
   ensureAudio(); interruptSpeech();
   const u=makeUtter("こんにちは。アサライ エーアイです。自由に、話そう。");
@@ -1776,6 +1814,7 @@ document.addEventListener("keydown",e=>{
   if(e.code==="Space"){ e.preventDefault(); togglePlay(); }
   else if(e.key==="ArrowLeft"){ startFrom(Math.max(0,S.si-1)); }
   else if(e.key==="ArrowRight"){ startFrom(Math.min(SCENES.length-1,S.si+1)); }
+  else if(e.key==="v"||e.key==="V"){ setNarr(!S.narr); }
   else if(e.key==="m"||e.key==="M"){ setMuted(!S.muted); }
   else if(e.key==="c"||e.key==="C"){ setCinema(!document.body.classList.contains("cinema")); }
   else if(e.key==="Escape"){ if(document.body.classList.contains("cinema")) setCinema(false); }
@@ -1842,11 +1881,12 @@ function applySettings(o){
   $("slateToggle").checked=o.slateOn; $("slateToggle").dispatchEvent(new Event("change"));
   $("bgmToggle").checked=o.bgm; $("bgmToggle").dispatchEvent(new Event("change"));
   $("loopToggle").checked=o.loop; $("loopToggle").dispatchEvent(new Event("change"));
+  setNarr(o.narr,true);
   const r=document.querySelector('input[name="theme"][value="'+o.theme+'"]');
   if(r){ r.checked=true; r.dispatchEvent(new Event("change")); }
 }
 $("btnReset").addEventListener("click",()=>{
-  applySettings({rate:1,pitch:1,vol:.9,subSize:1,grain:.45,glow:1,subStyle:"cinema",subOn:true,slateOn:true,bgm:true,loop:false,theme:"dawn"});
+  applySettings({rate:1,pitch:1,vol:.9,subSize:1,grain:.45,glow:1,subStyle:"cinema",subOn:true,slateOn:true,bgm:true,loop:false,narr:true,theme:"dawn"});
   toast("演出設定をリセットしました");
 });
 $("btnRandom").addEventListener("click",()=>{
@@ -1855,7 +1895,7 @@ $("btnRandom").addEventListener("click",()=>{
     rate:+$("rate").value, pitch:+(0.85+Math.random()*.4).toFixed(2), vol:+$("vol").value,
     subSize:+$("subSize").value, grain:+(0.15+Math.random()*.65).toFixed(2), glow:+(0.5+Math.random()*1.2).toFixed(2),
     subStyle:$("subStyle").value, subOn:$("subToggle").checked, slateOn:$("slateToggle").checked,
-    bgm:$("bgmToggle").checked, loop:$("loopToggle").checked,
+    bgm:$("bgmToggle").checked, loop:$("loopToggle").checked, narr:S.narr,
     theme:themes[Math.floor(Math.random()*themes.length)]
   });
   toast("演出をランダムに切り替えました 🎲");
