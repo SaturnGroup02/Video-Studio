@@ -1,614 +1,370 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GROK Typography Motion — 15s</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Space+Grotesk:wght@500;700&display=swap');
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: #050505;
-      color: #fff;
-      font-family: 'Inter', system-ui, sans-serif;
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .stage {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #0a0a0a;
-    }
-
-    .scene {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      will-change: opacity, transform;
-    }
-
-    .scene.active { opacity: 1; pointer-events: auto; }
-
-    /* ===== SCENE 1: Spiral + Icon (2.0s) ===== */
-    .spiral-container {
-      position: relative;
-      width: 260px;
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .spiral {
-      position: absolute;
-      inset: 0;
-      border: 2px solid transparent;
-      border-top-color: #00d4ff;
-      border-radius: 50%;
-      animation: spin 1.1s linear infinite;
-    }
-    .spiral:nth-child(2) {
-      inset: 18px;
-      border-top-color: #7b61ff;
-      animation-duration: 0.85s;
-      animation-direction: reverse;
-    }
-    .spiral:nth-child(3) {
-      inset: 36px;
-      border-top-color: #ff2d55;
-      animation-duration: 0.65s;
-    }
-
-    .icon-core {
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.45);
-      animation: pulse 0.9s ease-in-out infinite alternate;
-      z-index: 2;
-    }
-    .icon-core img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulse {
-      from { transform: scale(0.92); opacity: 0.85; }
-      to   { transform: scale(1.08); opacity: 1; }
-    }
-
-    .scene1-text {
-      margin-top: 36px;
-      font-size: 13px;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      color: #777;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.25s forwards;
-    }
-
-    /* ===== SCENE 2: Big Logo + Icon (2.0s) ===== */
-    .logo-row {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-
-    .logo-icon {
-      width: 88px;
-      height: 88px;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 0 40px rgba(99, 102, 241, 0.35);
-      transform: scale(0.5);
-      opacity: 0;
-    }
-    .logo-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .logo-big {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(3.8rem, 16vw, 8.2rem);
-      letter-spacing: -0.04em;
-      background: linear-gradient(135deg, #fff 0%, #a5b4fc 45%, #38bdf8 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      transform: scale(0.55);
-      opacity: 0;
-      filter: blur(14px);
-    }
-
-    .scene2.active .logo-icon {
-      animation: logoPop 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .scene2.active .logo-big {
-      animation: logoPop 0.85s 0.08s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes logoPop {
-      0%   { transform: scale(0.4); opacity: 0; filter: blur(18px); }
-      65%  { transform: scale(1.06); opacity: 1; filter: blur(0); }
-      100% { transform: scale(1); opacity: 1; filter: blur(0); }
-    }
-
-    .sub-logo {
-      margin-top: 14px;
-      font-size: 0.95rem;
-      letter-spacing: 7px;
-      color: #666;
-      opacity: 0;
-    }
-    .scene2.active .sub-logo {
-      animation: fadeUp 0.45s 0.45s forwards;
-    }
-
-    /* ===== SCENE 3: Morph around icon (2.4s) ===== */
-    .morph-wrap {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .morph-box {
-      position: absolute;
-      width: 160px;
-      height: 160px;
-      background: #3b82f6;
-      border-radius: 12px;
-      z-index: 1;
-    }
-
-    .morph-icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      overflow: hidden;
-      z-index: 3;
-      box-shadow: 0 0 25px rgba(0,0,0,0.5);
-      opacity: 0;
-    }
-    .morph-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .scene3.active .morph-box {
-      animation: morphShape 2.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-    .scene3.active .morph-icon {
-      animation: fadeScale 0.5s 0.15s forwards;
-    }
-
-    @keyframes morphShape {
-      0% {
-        border-radius: 12px;
-        width: 160px; height: 160px;
-        transform: rotate(0deg) scale(1);
-        background: #3b82f6;
-        box-shadow: none;
-      }
-      28% {
-        border-radius: 50%;
-        width: 180px; height: 180px;
-        transform: rotate(90deg) scale(1.08);
-        background: #6366f1;
-      }
-      52% {
-        border-radius: 50%;
-        width: 150px; height: 150px;
-        transform: rotate(180deg) scale(0.95);
-        background: #8b5cf6;
-        box-shadow: inset 0 0 0 38px #0a0a0a;
-      }
-      78% {
-        border-radius: 50%;
-        width: 190px; height: 190px;
-        transform: rotate(270deg) scale(1.02);
-        background: #a855f7;
-        box-shadow: inset 0 0 0 52px #0a0a0a;
-      }
-      100% {
-        border-radius: 50%;
-        width: 170px; height: 170px;
-        transform: rotate(360deg) scale(1);
-        background: #c084fc;
-        box-shadow: inset 0 0 0 45px #0a0a0a;
-      }
-    }
-
-    @keyframes fadeScale {
-      from { opacity: 0; transform: scale(0.6); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    .morph-label {
-      position: absolute;
-      bottom: 14%;
-      font-size: 12px;
-      letter-spacing: 3px;
-      color: #999;
-      opacity: 0;
-    }
-    .scene3.active .morph-label {
-      animation: fadeUp 0.4s 0.2s forwards;
-    }
-
-    /* ===== SCENE 4: Dot Grid (2.0s) ===== */
-    .dot-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 9px);
-      gap: 13px;
-      transform: scale(0.85);
-    }
-    .dot {
-      width: 7px;
-      height: 7px;
-      background: #3b82f6;
-      border-radius: 50%;
-      opacity: 0.25;
-    }
-    .scene4.active .dot {
-      animation: dotWave 1.7s ease-in-out forwards;
-    }
-    @keyframes dotWave {
-      0%   { opacity: 0.15; transform: scale(0.4); }
-      35%  { opacity: 1; transform: scale(1.5); background: #60a5fa; }
-      65%  { opacity: 0.85; transform: scale(1); background: #93c5fd; }
-      100% { opacity: 0.5; transform: scale(0.85); }
-    }
-
-    /* ===== SCENE 5: EASE + Icon (1.8s) ===== */
-    .pattern-wrap {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .wave-line {
-      position: absolute;
-      width: 220%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #ff2d55, #00d4ff, transparent);
-      border-radius: 3px;
-      opacity: 0.65;
-    }
-    .scene5.active .wave-line {
-      animation: waveMove 1.5s ease-in-out infinite;
-    }
-    @keyframes waveMove {
-      0%   { transform: translateX(-55%) scaleY(1); }
-      50%  { transform: translateX(0%) scaleY(2.8); }
-      100% { transform: translateX(55%) scaleY(1); }
-    }
-
-    .ease-row {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      z-index: 2;
-    }
-
-    .ease-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      overflow: hidden;
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    .ease-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-    .big-word {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(3.2rem, 14vw, 7.5rem);
-      letter-spacing: -0.03em;
-      text-shadow: 0 0 40px rgba(0, 212, 255, 0.35);
-      opacity: 0;
-      transform: scale(1.6) rotate(-3deg);
-      filter: blur(8px);
-    }
-
-    .scene5.active .ease-icon {
-      animation: logoPop 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .scene5.active .big-word {
-      animation: wordSlam 0.65s 0.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes wordSlam {
-      to { transform: scale(1) rotate(0); opacity: 1; filter: blur(0); }
-    }
-
-    /* ===== SCENE 6: Fast Typo (2.0s) ===== */
-    .typo-seq {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .typo-item {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(1.9rem, 7.5vw, 4.2rem);
-      letter-spacing: -0.02em;
-      opacity: 0;
-      transform: translateY(28px);
-    }
-    .scene6.active .typo-item:nth-child(1) { animation: typoIn 0.4s 0.04s cubic-bezier(0.16,1,0.3,1) forwards; color: #60a5fa; }
-    .scene6.active .typo-item:nth-child(2) { animation: typoIn 0.4s 0.22s cubic-bezier(0.16,1,0.3,1) forwards; color: #a78bfa; }
-    .scene6.active .typo-item:nth-child(3) { animation: typoIn 0.4s 0.40s cubic-bezier(0.16,1,0.3,1) forwards; color: #f472b6; }
-    .scene6.active .typo-item:nth-child(4) { animation: typoIn 0.4s 0.58s cubic-bezier(0.16,1,0.3,1) forwards; color: #34d399; }
-    @keyframes typoIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== SCENE 7: Final (2.8s) ===== */
-    .final-wrap { text-align: center; }
-
-    .final-icon {
-      width: 96px;
-      height: 96px;
-      border-radius: 24px;
-      overflow: hidden;
-      margin: 0 auto 20px;
-      box-shadow: 0 0 50px rgba(99, 102, 241, 0.4);
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    .final-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-    .final-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2.8rem, 11vw, 5.5rem);
-      letter-spacing: -0.03em;
-      opacity: 0;
-      transform: translateY(18px);
-    }
-
-    .scene7.active .final-icon {
-      animation: logoPop 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .scene7.active .final-logo {
-      animation: fadeUp 0.55s 0.25s forwards;
-    }
-
-    .final-sub {
-      margin-top: 14px;
-      font-size: 0.9rem;
-      letter-spacing: 3.5px;
-      color: #888;
-      opacity: 0;
-    }
-    .scene7.active .final-sub {
-      animation: fadeUp 0.45s 0.45s forwards;
-    }
-
-    .final-tag {
-      margin-top: 22px;
-      font-size: 11px;
-      letter-spacing: 2.5px;
-      color: #444;
-      opacity: 0;
-    }
-    .scene7.active .final-tag {
-      animation: fadeUp 0.4s 0.7s forwards;
-    }
-
-    /* Utils */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .progress {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #00d4ff, #7b61ff, #ff2d55);
-      width: 0%;
-      z-index: 100;
-      transition: width 0.08s linear;
-    }
-
-    .wm {
-      position: fixed;
-      top: 16px;
-      right: 20px;
-      font-size: 11px;
-      color: #555;
-      letter-spacing: 1px;
-      z-index: 50;
-      font-family: monospace;
-    }
-
-    .top-label {
-      position: fixed;
-      top: 16px;
-      left: 20px;
-      font-size: 11px;
-      color: #666;
-      letter-spacing: 2px;
-      z-index: 50;
-      font-family: monospace;
-    }
-
-    .time-label {
-      position: fixed;
-      bottom: 14px;
-      right: 18px;
-      font-size: 11px;
-      color: #444;
-      font-family: monospace;
-      z-index: 50;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GLM-5.3FLASH — Motion Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   GLM-5.3FLASH — 13-scene motion reel (modeled on the reference:
+   one distinct concept per cut, ~1.5s each, hard cuts + flashes)
+   - glm.png & qwen.log load from the SAME repository (relative)
+   - canvas engine + WebAudio beat (120bpm), auto-loop
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#05060a}
+body{font-family:'Space Mono',ui-monospace,Menlo,monospace;color:#f2f5ff}
+#c{position:fixed;inset:0;display:block}
+/* HUD chrome */
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;
+  justify-content:space-between;align-items:center;padding:14px 18px;
+  font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+  color:#8b8fa0;pointer-events:none;user-select:none}
+#hud b{color:#d8ff3e;font-weight:700}
+#sound{pointer-events:auto;cursor:pointer;background:transparent;
+  border:1px solid #262b3a;border-radius:999px;color:#8b8fa0;
+  font:inherit;font-size:10px;letter-spacing:.25em;text-transform:uppercase;
+  padding:.55em 1.1em}
+#sound:hover{color:#d8ff3e;border-color:#d8ff3e}
+#bar{position:fixed;left:0;bottom:0;height:3px;width:0;background:#d8ff3e;z-index:10}
+#barbg{position:fixed;left:0;right:0;bottom:0;height:3px;background:#161a26;z-index:9}
+#scn{position:fixed;right:18px;bottom:14px;z-index:10;font-size:10px;
+  letter-spacing:.3em;color:#5d6474;user-select:none}
+</style>
 </head>
 <body>
-  <div class="top-label">GROK · MOTION · 15s</div>
-  <div class="wm">@grok.xai</div>
-  <div class="time-label" id="timeLabel">0.0s</div>
-  <div class="progress" id="progress"></div>
+<canvas id="c"></canvas>
+<div id="hud"><span><b>&#9646;</b> GLM-5.3FLASH — MOTION REEL</span>
+<button id="sound">SOUND OFF</button></div>
+<div id="barbg"></div><div id="bar"></div>
+<div id="scn">SC 01/13</div>
+<script>
+'use strict';
+/* ---------- setup ---------- */
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,devicePixelRatio||1);
+  W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);}
+addEventListener('resize',resize);resize();
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ACID='#d8ff3e',VIOLET='#4b2fff',BLUE='#2b3aff',PAPER='#f2efe6',
+      INK='#14141a',HOT='#ff3b2e',YELLOW='#d8ff3e';
+const DISP=s=>`${s}px 'Archivo Black','Arial Black',sans-serif`;
+const MONO=(s,b)=>`${b?'700 ':'400 '}${s}px 'Space Mono',ui-monospace,monospace`;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const eoc=p=>1-Math.pow(1-clamp(p,0,1),3);
+const eio=p=>{p=clamp(p,0,1);return p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2};
+const eob=p=>{p=clamp(p,0,1);const c=1.9;return 1+(c+1)*Math.pow(p-1,3)+c*Math.pow(p-1,2)};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const R=()=>Math.random();
 
-  <div class="stage" id="stage">
-    <!-- 1. Spiral + icon  2.0s -->
-    <div class="scene scene1" data-duration="2000">
-      <div class="spiral-container">
-        <div class="spiral"></div>
-        <div class="spiral"></div>
-        <div class="spiral"></div>
-        <div class="icon-core">
-          <img src="grok.png" alt="Grok">
-        </div>
-      </div>
-      <div class="scene1-text">INITIALIZING</div>
-    </div>
+/* ---------- assets: same-repo relative paths ---------- */
+let logo=null;                       /* glm.png <Image> or null */
+const logoImg=new Image();
+logoImg.onload=()=>{logo=logoImg};
+logoImg.onerror=()=>{logo=null};
+logoImg.src='glm.png';
+let LOG_LINES=['[INFO ] glm runtime online','[INFO ] 5 agents spawned','[WARN ] tempo above limit','[INFO ] flash mode enabled'];
+fetch('qwen.log',{cache:'no-store'}).then(r=>r.ok?r.text():Promise.reject())
+ .then(t=>{
+   const EFX=new Set(['SLAM','STAMP','POP','WIPE','SCATTER','SPIN','TYPE','GLITCH','STROBE','MARQUEE','SHAPE','COUNT','IMG']);
+   const lines=t.split(/\r?\n/).map(s=>s.trim())
+     .filter(l=>l&&!l.startsWith('#')&&!l.startsWith('//')&&!/^BG[\s:=]/i.test(l))
+     .map(l=>l.replace(/^\[[0-9.:]+\]\s*/,'').replace(/^\[?([A-Za-z]+)\]?\s+/,(m,g)=>EFX.has(g.toUpperCase())?'':m).trim())
+     .filter(l=>l.length>=6&&l.length<=44);
+   if(lines.length>=3)LOG_LINES=lines.slice(0,4);
+ }).catch(()=>{});
 
-    <!-- 2. Big GROK + icon  2.0s -->
-    <div class="scene scene2" data-duration="2000">
-      <div class="logo-row">
-        <div class="logo-icon">
-          <img src="grok.png" alt="Grok">
-        </div>
-        <div class="logo-big">GROK</div>
-      </div>
-      <div class="sub-logo">xAI</div>
-    </div>
+/* ---------- scene table (13 cuts, ~18s loop) ---------- */
+const SCENES=[
+ {n:'SPIRAL', d:1.5,bg:'#07070c',f:sSpiral},
+ {n:'TYPE',   d:1.4,bg:'#07070c',f:sType},
+ {n:'PUNCH',  d:1.5,bg:VIOLET,  f:sPunch,flash:1,shake:1},
+ {n:'SCATTER',d:1.0,bg:VIOLET,  f:sScatter},
+ {n:'ORBIT',  d:1.4,bg:'#07070c',f:sOrbit},
+ {n:'MORPH',  d:1.6,bg:BLUE,    f:sMorph,flash:1},
+ {n:'GRID',   d:1.5,bg:PAPER,   f:sGrid},
+ {n:'LOGO',   d:1.5,bg:'#07070c',f:sLogo,flash:1,shake:1},
+ {n:'RUNTIME',d:1.7,bg:PAPER,   f:sRuntime},
+ {n:'SPHERE', d:1.7,bg:'#07070c',f:sSphere},
+ {n:'FLOOD',  d:1.1,bg:'#07070c',f:sFlood},
+ {n:'RUN',    d:1.3,bg:YELLOW,  f:sRun,flash:1,shake:1},
+ {n:'END',    d:1.9,bg:'#07070c',f:sEnd},
+];
+let STARTS=[],TOTAL=0;
+{let a=0;for(const s of SCENES){STARTS.push(a);a+=s.d}TOTAL=a}
 
-    <!-- 3. Morph  2.4s -->
-    <div class="scene scene3" data-duration="2400">
-      <div class="morph-wrap">
-        <div class="morph-box"></div>
-        <div class="morph-icon">
-          <img src="grok.png" alt="Grok">
-        </div>
-      </div>
-      <div class="morph-label">SHAPE → FORM → SPACE</div>
-    </div>
+/* ---------- shared state ---------- */
+let T=0,sceneIdx=-1,flashT=9,shakeT=9,cur=null,tl=0;
+let particles=[],spherePts=[],morphShapes=[],truchetW=null,truchetO=null;
 
-    <!-- 4. Dot grid  2.0s -->
-    <div class="scene scene4" data-duration="2000">
-      <div class="dot-grid" id="dotGrid"></div>
-    </div>
+/* ---------- helpers ---------- */
+function txt(s,font,col,x,y,align='center',base='alphabetic'){
+  ctx.fillStyle=col;ctx.font=font;ctx.textAlign=align;ctx.textBaseline=base;ctx.fillText(s,x,y)}
+function glow(col,b){ctx.shadowColor=col;ctx.shadowBlur=b}
+function noglow(){ctx.shadowBlur=0}
+function rounded(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+/* closed polygon resampled to N points (for shape morphing) */
+function poly(verts,N){const out=[],per=[];let tot=0;
+  for(let i=0;i<verts.length;i++){const a=verts[i],b=verts[(i+1)%verts.length];
+    const d=Math.hypot(b[0]-a[0],b[1]-a[1]);per.push(d);tot+=d}
+  for(let i=0;i<N;i++){let target=i/N*tot,k=0;
+    while(target>per[k]){target-=per[k];k++}
+    const a=verts[k],b=verts[(k+1)%verts.length],f=target/per[k];
+    out.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f])}
+  return out}
+function shapeSet(s){
+  const c=[[0,0]],sq=[],tri=[],st=[];
+  for(let i=0;i<100;i++){const a=i/100*Math.PI*2-Math.PI/2;c.push([Math.cos(a)*s,Math.sin(a)*s])}
+  const h=s*.9;
+  sq.push([-h,-h],[h,-h],[h,h],[-h,h]);
+  const t=s*1.05;
+  tri.push([0,-t],[t*.95,t*.72],[-t*.95,t*.72]);
+  for(let i=0;i<10;i++){const a=i/10*Math.PI*2-Math.PI/2,r=i%2?s*.44:s;
+    st.push([Math.cos(a)*r,Math.sin(a)*r])}
+  return [poly(sq,100),poly(c,100),poly(tri,100),poly(st,100)]}
 
-    <!-- 5. EASE  1.8s -->
-    <div class="scene scene5" data-duration="1800">
-      <div class="pattern-wrap">
-        <div class="wave-line" style="top: 28%; animation-delay: 0s;"></div>
-        <div class="wave-line" style="top: 48%; animation-delay: 0.18s; background: linear-gradient(90deg, transparent, #7b61ff, #00d4ff, transparent);"></div>
-        <div class="wave-line" style="top: 68%; animation-delay: 0.36s;"></div>
-      </div>
-      <div class="ease-row">
-        <div class="ease-icon">
-          <img src="grok.png" alt="Grok">
-        </div>
-        <div class="big-word">EASE</div>
-      </div>
-    </div>
+/* ---------- scene draws ---------- */
+function sSpiral(u,cx,cy,p){
+  const maxA=5.5*Math.PI,rot=T*1.5,drawn=maxA*eoc(p/0.72);
+  ctx.strokeStyle='rgba(242,245,255,.14)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cy,u*.30,0,7);ctx.stroke();
+  glow(ACID,14);ctx.strokeStyle=ACID;ctx.lineWidth=2.6;ctx.beginPath();
+  for(let a=0;a<drawn;a+=.11){const r=2+a*u*.0165,x=cx+Math.cos(a+rot)*r,y=cy+Math.sin(a+rot)*r;
+    a?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+  ctx.stroke();noglow();
+  const tr=2+drawn*u*.0165;
+  ctx.fillStyle='#fff';ctx.beginPath();
+  ctx.arc(cx+Math.cos(drawn+rot)*tr,cy+Math.sin(drawn+rot)*tr,4,0,7);ctx.fill();
+  txt('» boot: signal',MONO(u*.022),'#5d6474',cx,cy+u*.36,'center')}
+function sType(u,cx,cy,p){
+  ctx.fillStyle='rgba(255,255,255,.035)';
+  for(let y=0;y<H;y+=4)ctx.fillRect(0,y,W,1);
+  const full='GLM-5.3-FLASH',n=clamp(Math.floor(p/0.058),0,full.length);
+  ctx.save();ctx.translate(cx,cy-u*.16);ctx.scale(eob(Math.min(1,p/0.18)),1);
+  ctx.fillStyle=ACID;ctx.fillRect(-u*.21,-u*.006,u*.42*eio(Math.min(1,p/.5)),2);
+  const s=full.slice(0,n);
+  ctx.font=MONO(u*.052,1);ctx.textAlign='left';ctx.textBaseline='middle';
+  const w=ctx.measureText(s).width,x=-w/2;
+  ctx.fillStyle='#f2f5ff';ctx.fillText(s,x,0);
+  if(T%0.7<0.42){ctx.fillStyle=ACID;ctx.fillRect(x+w+u*.012,-u*.03,u*.028,u*.06)}
+  ctx.restore();
+  txt('» sys/boot: glm-5.3-flash ... ok',MONO(u*.02), '#5d6474',cx,cy+u*.30,'center')}
+function sPunch(u,cx,cy,p){
+  const s=1+(1-eob(Math.min(1,p/0.4)))*2.3;
+  ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  glow('#ffffff',26);txt('GLM',DISP(u*.34),'#f2f5ff',0,0,'center','middle');noglow();
+  ctx.restore();
+  txt('S E R I E S  5 . 3',MONO(u*.024,1),'rgba(242,245,255,.75)',cx,cy+u*.30,'center');
+  txt('kinetic identity reel',MONO(u*.018),'rgba(242,245,255,.45)',cx,cy+u*.35,'center')}
+function sScatter(u,cx,cy,p){
+  if(!particles.length){for(let i=0;i<300;i++)particles.push({
+    x:cx+rnd(-u*.16,u*.16),y:cy+rnd(-u*.10,u*.10),
+    vx:rnd(-1,1)*u*.38,vy:rnd(-1,1)*u*.38,
+    r:rnd(2,5.5),c:[ACID,'#f2f5ff','#8fa3ff',HOT][i%4]})}
+  ctx.globalAlpha=1-eio(p/0.8);
+  ctx.save();ctx.translate(cx,cy);ctx.scale(1+p*.8,1+p*.8);
+  glow('#fff',18);txt('GLM',DISP(u*.34),'#f2f5ff',0,0,'center','middle');noglow();
+  ctx.restore();ctx.globalAlpha=1;
+  for(const q of particles){q.x+=q.vx*0.016;q.y+=q.vy*0.016;
+    ctx.globalAlpha=(1-p*0.75)*.95;ctx.fillStyle=q.c;
+    ctx.fillRect(q.x,q.y,q.r,q.r)}
+  ctx.globalAlpha=1}
+function sOrbit(u,cx,cy,p){
+  const s='GLM-5.3·FLASH·GLM-5.3·FLASH·',rot=T*.8,R0=u*.235;
+  ctx.font=MONO(u*.03,1);ctx.fillStyle='#f2f5ff';
+  for(let i=0;i<s.length;i++){const a=i/s.length*Math.PI*2+rot;
+    ctx.save();ctx.translate(cx+Math.cos(a)*R0,cy+Math.sin(a)*R0);
+    ctx.rotate(a+Math.PI/2);ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(s[i],0,0);ctx.restore()}
+  const pr=u*.05+Math.sin(T*5)*u*.008;
+  glow(ACID,18);ctx.fillStyle=ACID;ctx.beginPath();ctx.arc(cx,cy,pr,0,7);ctx.fill();noglow();
+  ctx.strokeStyle='rgba(216,255,62,.4)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(cx,cy,pr+u*.05,0,7);ctx.stroke();
+  txt('circular identity lock',MONO(u*.02),'#5d6474',cx,cy+u*.36,'center')}
+function sMorph(u,cx,cy,p){
+  ctx.fillStyle='rgba(242,245,255,.10)';
+  for(let x=0;x<W;x+=u*.07)for(let y=0;y<H;y+=u*.07)ctx.fillRect(x,y,2,2);
+  if(!morphShapes.length)morphShapes=shapeSet(u*.20);
+  const seg=clamp(p*3.2,0,2.999),i=Math.floor(seg),f=eio(seg-i);
+  const A=morphShapes[i],B=morphShapes[i+1],rot=T*.6;
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);
+  ctx.fillStyle=PAPER;ctx.beginPath();
+  for(let k=0;k<100;k++){const x=A[k][0]+(B[k][0]-A[k][0])*f,y=A[k][1]+(B[k][1]-A[k][1])*f;
+    k?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+  ctx.closePath();ctx.fill();ctx.restore();
+  const cols=[PAPER,ACID,HOT];
+  for(let k=0;k<3;k++){const a=T*(1.6+k*.5)+k*2.1,r=u*(.30+k*.045);
+    ctx.fillStyle=cols[k];ctx.beginPath();
+    ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,u*.014,0,7);ctx.fill()}
+  txt('FORM / 01 — 04',MONO(u*.02,1),'rgba(242,245,255,.8)',cx,cy+u*.37,'center')}
+function sGrid(u,cx,cy,p){
+  const cols=Math.ceil(W/(u*.055)),rows=Math.ceil(H/(u*.055));
+  const wx=cx+Math.sin(T*2.2)*u*.3,wy=cy+Math.cos(T*1.7)*u*.2;
+  ctx.fillStyle=INK;
+  for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){
+    const x=i*u*.055+u*.03,y=j*u*.055+u*.03;
+    const d=Math.hypot(x-wx,y-wy),r=2+3.2*Math.max(0,Math.sin(d/(u*.09)-T*6));
+    ctx.globalAlpha=clamp(.85-r*.09,.15,1);
+    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}
+  ctx.globalAlpha=1;
+  const rx=-W*.35+(W*1.7)*eio(p),ry=cy-u*.11,rw=u*.36,rh=u*.22;
+  ctx.save();ctx.translate(rx+rw/2,ry+rh/2);ctx.rotate(-.06+Math.sin(T*3)*.02);
+  ctx.shadowColor='rgba(43,58,255,.35)';ctx.shadowBlur=18;ctx.shadowOffsetY=6;
+  ctx.fillStyle='#2b3aff';rounded(-rw/2,-rh/2,rw,rh,u*.02);ctx.fill();
+  ctx.shadowColor='transparent';
+  txt('GLM',DISP(rh*.34),'#f2f5ff',0,0,'center','middle');
+  ctx.restore();
+  txt('» matrix / sync',MONO(u*.02),'#9a968a',cx,H-u*.06,'center')}
+function sLogo(u,cx,cy,p){
+  const s=.25+eob(Math.min(1,p/0.42))*.75;
+  const w=u*.5*s;
+  if(logo){const ih=logo.height/logo.width;
+    glow(ACID,14+Math.sin(T*6)*10);
+    ctx.drawImage(logo,cx-w/2,cy-(w*ih)/2,w,w*ih);noglow();
+    if(p<.5){const off=(R()-.5)*u*.05,cs=u*.10*(1-p*2);
+      ctx.save();ctx.beginPath();ctx.rect(cx-w/2,cy-w*ih/2+cs*2,w,cs);ctx.clip();
+      ctx.globalAlpha=.8;ctx.drawImage(logo,cx-w/2+off,cy-(w*ih)/2,w,w*ih);
+      ctx.restore();ctx.globalAlpha=1}}
+  else{ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+    glow(ACID,16);txt('GLM',DISP(u*.3),ACID,0,0,'center','middle');noglow();ctx.restore()}
+  txt('powered by glm.png',MONO(u*.02),'#5d6474',cx,cy+u*.32,'center')}
+function sRuntime(u,cx,cy,p){
+  ctx.fillStyle=INK;
+  txt('GLM RUNTIME — LIVE FEED',MONO(u*.022,1),INK,u*.06,u*.08,'left','middle');
+  ctx.fillStyle=BLUE;ctx.fillRect(u*.06,u*.105,u*.09,3);
+  const cardW=u*.34,cardH=u*.30,kx=W-cardW-u*.07,ky=u*.13;
+  ctx.shadowColor='rgba(20,20,26,.3)';ctx.shadowBlur=20;ctx.shadowOffsetY=6;
+  ctx.fillStyle=BLUE;rounded(kx,ky,cardW,cardH,u*.025);ctx.fill();ctx.shadowColor='transparent';
+  txt('5',DISP(cardH*.52),'#f2f5ff',kx+cardW/2,ky+cardH*.44,'center','middle');
+  txt('AGENTS ONLINE',MONO(cardW*.075,1),'rgba(242,245,255,.85)',kx+cardW/2,ky+cardH*.80,'center','middle');
+  ctx.font=MONO(u*.022);ctx.textAlign='left';ctx.textBaseline='middle';
+  LOG_LINES.slice(0,3).forEach((line,i)=>{
+    const lp=clamp((p-.18-i*.3)/.34,0,1);if(lp<=0)return;
+    const s2='▸ '+line.slice(0,Math.floor(line.length*lp));
+    ctx.fillStyle=i===1?HOT:i===2?'#5c6ac4':'#14141a';
+    ctx.fillText(s2,u*.06,u*(.22+i*.075))});
+  const bp=eio(clamp((p-.1)/.8,0,1));
+  ctx.fillStyle='rgba(20,20,26,.12)';ctx.fillRect(u*.06,H-u*.09,W-u*.12,3);
+  ctx.fillStyle=BLUE;ctx.fillRect(u*.06,H-u*.09,(W-u*.12)*bp,3);
+  txt('qwen.log · typed live',MONO(u*.018),'#9a968a',u*.06,H-u*.065,'left','middle')}
+function sSphere(u,cx,cy,p){
+  if(!spherePts.length){const N=340;
+    for(let i=0;i<N;i++){const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),ph=i*2.399963;
+      spherePts.push([Math.cos(ph)*r,y,Math.sin(ph)*r])}}
+  const A=T*1.2,R0=u*.21;
+  for(const[x0,y0,z0]of spherePts){
+    const x1=x0*Math.cos(A)+z0*Math.sin(A),z1=-x0*Math.sin(A)+z0*Math.cos(A);
+    const ph=Math.atan2(z1,x1),mod=1+.2*Math.sin(3*ph+T*3)+.08*Math.sin(T*5+y0*4);
+    const x=x1*mod,y=y0*mod,z=z1*mod,f=2.4/(2.4+z),sx=cx+x*R0*f,sy=cy+y*R0*f;
+    const d=(z+1)/2;
+    ctx.globalAlpha=.25+.75*(1-d);ctx.fillStyle=d<.45?ACID:'#8fa3ff';
+    ctx.beginPath();ctx.arc(sx,sy,(1.1+2.1*(1-d))*f,0,7);ctx.fill()}
+  ctx.globalAlpha=1;
+  txt('340 nodes · latent space',MONO(u*.02),'#5d6474',cx,cy+u*.36,'center')}
+function sFlood(u,cx,cy,p){
+  if(!truchetW)buildTruchet(u);
+  const pat=p<.55?truchetW:truchetO,Rr=eio(p)*Math.hypot(W,H)*.62;
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,Rr,0,7);ctx.clip();
+  ctx.fillStyle=ctx.createPattern(pat,'repeat');ctx.fillRect(0,0,W,H);ctx.restore();
+  if(p<.5){glow('#fff',12);ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.arc(cx,cy,u*.02+p*u*.03,0,7);ctx.fill();noglow()}}
+function buildTruchet(u){
+  const cs=u*.075,N=8,sz=cs*N;
+  const mk=col=>{const o=document.createElement('canvas');o.width=o.height=sz;
+    const g=o.getContext('2d');g.strokeStyle=col;g.lineWidth=cs*.26;g.lineCap='round';
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++){const x=i*cs,y=j*cs;
+      g.beginPath();
+      if(R()<.5){g.arc(x,y,cs/2,-Math.PI/2,0);g.stroke();g.beginPath();
+        g.arc(x+cs,y+cs,cs/2,Math.PI,Math.PI/2,true)}
+      else{g.arc(x+cs,y,cs/2,Math.PI/2,Math.PI);g.stroke();g.beginPath();
+        g.arc(x,y+cs,cs/2,0,Math.PI/2)}
+      g.stroke()}
+    return o};
+  truchetW=mk('#f2f5ff');truchetO=mk(HOT)}
+function sRun(u,cx,cy,p){
+  const x=-W*.5+(W*.5+0)*eob(Math.min(1,p/0.38));
+  ctx.save();ctx.translate(cx+x,cy);ctx.transform(1,0,-.22,1,0,0);
+  txt('RUN',DISP(u*.34),INK,0,0,'center','middle');ctx.restore();
+  if(p>.4)txt('» glm-5.3-flash',MONO(u*.024,1),'rgba(20,20,26,.8)',cx,cy+u*.24,'center')}
+function sEnd(u,cx,cy,p){
+  if(logo){const w=u*.17,ih=logo.height/logo.width;
+    ctx.drawImage(logo,cx-w/2,cy-u*.24-w*ih/2,w,w*ih)}
+  ctx.save();ctx.translate(cx,cy-u*.02);ctx.scale(Math.min(1,p/.25),1);
+  txt('GLM-5.3 FLASH.',DISP(u*.062),'#f2f5ff',0,0,'center','middle');ctx.restore();
+  ctx.fillStyle=ACID;ctx.fillRect(cx-u*.16,cy+u*.05,u*.32*eio(Math.min(1,p/.4)),3);
+  if(T%0.8<0.5)txt('» loop: replay',MONO(u*.022),'#5d6474',cx,cy+u*.16,'center');
+  txt('GLM · MOTION REEL — 13 CUTS',MONO(u*.016),'#3a3f4e',cx,H-u*.06,'center')}
 
-    <!-- 6. Typo sequence  2.0s -->
-    <div class="scene scene6" data-duration="2000">
-      <div class="typo-seq">
-        <div class="typo-item">FAST</div>
-        <div class="typo-item">MOTION</div>
-        <div class="typo-item">TYPO</div>
-        <div class="typo-item">∞</div>
-      </div>
-    </div>
+/* ---------- audio (120bpm synth bed) ---------- */
+let actx=null,master=null,soundOn=false,nextBeat=0,beatN=0,lastScene=-1;
+function initAudio(){actx=new (window.AudioContext||window.webkitAudioContext)();
+  master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
+  noiseBuf=actx.createBuffer(1,actx.sampleRate*.5,actx.sampleRate);
+  const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  nextBeat=actx.currentTime+.05;setInterval(schedule,50)}
+let noiseBuf=null;
+function kick(t){const o=actx.createOscillator(),g=actx.createGain();
+  o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(46,t+.11);
+  g.gain.setValueAtTime(.85,t);g.gain.exponentialRampToValueAtTime(.001,t+.13);
+  o.connect(g).connect(master);o.start(t);o.stop(t+.14)}
+function hat(t){const s=actx.createBufferSource(),g=actx.createGain(),f=actx.createBiquadFilter();
+  s.buffer=noiseBuf;f.type='highpass';f.frequency.value=7000;
+  g.gain.setValueAtTime(.16,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);
+  s.connect(f).connect(g).connect(master);s.start(t);s.stop(t+.05)}
+function bass(t,fr){const o=actx.createOscillator(),g=actx.createGain(),f=actx.createBiquadFilter();
+  o.type='square';o.frequency.value=fr;f.type='lowpass';f.frequency.value=420;
+  g.gain.setValueAtTime(.22,t);g.gain.exponentialRampToValueAtTime(.001,t+.42);
+  o.connect(f).connect(g).connect(master);o.start(t);o.stop(t+.45)}
+function whoosh(t){const s=actx.createBufferSource(),g=actx.createGain(),f=actx.createBiquadFilter();
+  s.buffer=noiseBuf;f.type='bandpass';f.Q.value=1.4;
+  f.frequency.setValueAtTime(500,t);f.frequency.exponentialRampToValueAtTime(2400,t+.22);
+  g.gain.setValueAtTime(.28,t);g.gain.exponentialRampToValueAtTime(.001,t+.26);
+  s.connect(f).connect(g).connect(master);s.start(t);s.stop(t+.28)}
+const ROOTS=[55,55,62,62,49,58,44,55,49,44,65,49,44];
+function schedule(){if(!actx||!soundOn)return;
+  while(nextBeat<actx.currentTime+.16){
+    kick(nextBeat);
+    if(beatN%2)hat(nextBeat);else{hat(nextBeat);hat(nextBeat+.25)}
+    if(lastScene!==sceneIdx){lastScene=sceneIdx;bass(nextBeat,ROOTS[sceneIdx]||55);whoosh(nextBeat)}
+    nextBeat+=.5;beatN++}}
+const btn=document.getElementById('sound');
+btn.addEventListener('click',()=>{if(!actx)initAudio();
+  actx.resume();soundOn=!soundOn;
+  master.gain.linearRampToValueAtTime(soundOn?.55:0,actx.currentTime+.1);
+  btn.textContent=soundOn?'SOUND ON':'SOUND OFF'});
 
-    <!-- 7. Final  2.8s  (total = 15.0s) -->
-    <div class="scene scene7" data-duration="2800">
-      <div class="final-wrap">
-        <div class="final-icon">
-          <img src="grok.png" alt="Grok">
-        </div>
-        <div class="final-logo">GROK</div>
-        <div class="final-sub">UNDERSTAND THE UNIVERSE</div>
-        <div class="final-tag">CSS × HTML  ·  15s LOOP</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Generate dots
-    const grid = document.getElementById('dotGrid');
-    for (let i = 0; i < 144; i++) {
-      const d = document.createElement('div');
-      d.className = 'dot';
-      d.style.animationDelay = (i % 12) * 0.012 + Math.floor(i / 12) * 0.018 + 's';
-      grid.appendChild(d);
-    }
-
-    const scenes = Array.from(document.querySelectorAll('.scene'));
-    const progress = document.getElementById('progress');
-    const timeLabel = document.getElementById('timeLabel');
-    let totalDuration = 0;
-    scenes.forEach(s => totalDuration += parseInt(s.dataset.duration, 10));
-
-    function showScene(index) {
-      scenes.forEach((s, i) => s.classList.toggle('active', i === index));
-    }
-
-    function run() {
-      let sceneIndex = -1;
-      const start = performance.now();
-
-      function tick() {
-        const now = performance.now();
-        const t = (now - start) % totalDuration;
-        timeLabel.textContent = (t / 1000).toFixed(1) + 's';
-        progress.style.width = (t / totalDuration * 100) + '%';
-
-        let acc = 0;
-        let idx = 0;
-        for (let i = 0; i < scenes.length; i++) {
-          const d = parseInt(scenes[i].dataset.duration, 10);
-          if (t < acc + d) { idx = i; break; }
-          acc += d;
-        }
-        if (idx !== sceneIndex) {
-          sceneIndex = idx;
-          showScene(sceneIndex);
-        }
-        requestAnimationFrame(tick);
-      }
-
-      showScene(0);
-      requestAnimationFrame(tick);
-    }
-
-    const img = new Image();
-    img.src = 'grok.png';
-    img.onload = () => setTimeout(run, 150);
-    img.onerror = () => setTimeout(run, 150);
-  </script>
+/* ---------- main loop ---------- */
+const bar=document.getElementById('bar'),scnEl=document.getElementById('scn');
+let t0=null;
+function frame(now){
+  if(t0===null)t0=now;
+  T=((now-t0)/1000)%TOTAL;
+  let idx=0;while(idx<SCENES.length-1&&T>=STARTS[idx+1])idx++;
+  const sc=SCENES[idx];
+  if(idx!==sceneIdx){sceneIdx=idx;cur=sc;tl=0;particles=[];flashT=sc.flash&&!REDUCE?0:9;
+    shakeT=sc.shake&&!REDUCE?0:9}
+  tl+=1/60;const p=clamp(tl/sc.d,0,1);
+  const u=Math.min(W,H),cx=W/2,cy=H/2;
+  ctx.fillStyle=sc.bg;ctx.fillRect(0,0,W,H);
+  if(shakeT<.22){const k=(1-shakeT/.22)*9;
+    ctx.translate(rnd(-k,k),rnd(-k,k))}
+  sc.f(u,cx,cy,p);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  if(flashT<.08){ctx.fillStyle=`rgba(255,255,255,${.9*(1-flashT/.08)})`;
+    ctx.fillRect(0,0,W,H)}
+  flashT+=1/60;shakeT+=1/60;
+  bar.style.width=(T/TOTAL*100)+'%';
+  scnEl.textContent='SC '+String(idx+1).padStart(2,'0')+'/13 — '+sc.n;
+  requestAnimationFrame(frame)}
+addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R')t0=null});
+document.fonts.ready.then(()=>requestAnimationFrame(frame));
+setTimeout(()=>{if(t0===null)requestAnimationFrame(frame)},1500);
+</script>
 </body>
 </html>
